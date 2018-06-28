@@ -6,7 +6,7 @@ const Bookshelf = (props) => {
     <div className="bookshelf">
     <h2 className="bookshelf-title">{props.shelfName}</h2>
     <div className="bookshelf-books">
-      {props.bookList ? (
+      {(props.bookList && props.bookList.length > 0) ? (
         <ol className="books-grid">
           {props.bookList.map((book) => (
           <li key={book.id}>
