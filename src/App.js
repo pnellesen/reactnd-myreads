@@ -21,7 +21,11 @@ class BooksApp extends React.Component {
     {id: 'read', name:'Read'},
   ]
 
-  componentDidMount() {
+  componentDidUpdate() {
+    console.log("currentReads? %O", this.state.currentReads);
+  }
+
+  getCurrentReads() {
     BooksAPI.getAll().then((result) => {
       this.setState({
         currentReads: result
@@ -29,12 +33,40 @@ class BooksApp extends React.Component {
     })
   }
 
-  componentDidUpdate() {
-    console.log("currentReads? %O", this.state.currentReads);
+  changeBookshelf = (bookId, shelfId) =>  {
+    // first update our state, then update the backend. Much better performance on front end
+    this.setState((prevState) => {
+      let bookToChange = prevState.currentReads.find((book) => book.id === bookId)
+      bookToChange.shelf = shelfId;
+    }, () => {
+      try {
+        const bookObj = {id: bookId}
+        BooksAPI.update(bookObj, shelfId).then((result) => {
+          /**
+           * TODO: compare ids in the result shelves with the ids in our 
+           * new state. If they're different, it probably means nothing was actually updated
+           * reset state back to prevState and show user an error message?
+           */
+          console.log(`bookupdate - result for book id ${bookId}: %O`, result);
+          console.log("bookupdate - newState: %O", this.state.currentReads.map((book) => [book.shelf, book.id]));
+        });
+      } catch(err) {
+        /**
+           * TODO: maybe some error handling to let user know 
+           * backend hasn't been updated even though UI has?
+           * I'd rather do the state update first since it's (almost) instanteneous
+           * from a UI perspectve, but if update fails, I want to reset the state in a user friendly way
+           * 
+           */
+          console.log("book update error: %O", err);
+      }
+      
+    })
+
   }
 
-  changeBookshelf(bookId, shelfId) {
-    console.log("Change bookshelf for " + bookId + " to " + shelfId);
+  componentDidMount() {
+    this.getCurrentReads()
   }
 
   render() {
@@ -69,10 +101,6 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-          	 	{/* 
-                	Create a "Bookshelf" component, takes a "shelfId" prop of one the following: {'currentlyReading', 'wantToRead', 'read'}. Might also take a "title" prop.
-                    takes a booklist prop containing array of book objects from getAll() filtered for the appropriate shelf
-                */}
                 {this.bookshelfList.map((bookshelf) => 
                   (
                     <Bookshelf
@@ -84,7 +112,6 @@ class BooksApp extends React.Component {
                     />
                   )
                 )}
-
               </div>
             </div>
             <div className="open-search">
