@@ -6,17 +6,25 @@ class BookSearch extends Component {
     state = {
         value: this.props.searchVal
     }
-
     timeout = null;
 
+    /**
+     * Don't send query to search backend on every keystroke,
+     * wait until it's been .5s since last keyUp, then do the query,
+     * assuming user is done typing. Do search immediately if they hit the Enter key
+     */
     _keyUp = (evt) => {
-        clearTimeout(this.timeout);
-        // Make a new timeout set to go off in 800ms
-        this.timeout = setTimeout(() => {
-            console.log("keyUp delay - value: " + this.state.value);
+        if (evt.key === 'Enter') {
             this.props.onUpdate(this.state.value);
-            
-        }, 1000);
+        } else {
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                console.log("keyUp delay - value: " + this.state.value);
+                this.props.onUpdate(this.state.value);
+                
+            }, 500);
+        }
+        
 
     }
     _onChange = (evt) => {
@@ -45,13 +53,20 @@ class BookSearch extends Component {
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-                {/*
-                    This will hold the books that are returned from the book search. 
-                    will be a series of <li><Book .../></li> elements.
-                    If a book is already on a bookshelf, we may want to indicate that somehow
-                    other than simply by letting the BookshelfChanger in the <Book> show the right
-                    option in the dropdown.
-                */}
+                {
+                    this.props.searchResults.error ? 
+                        <li>No books found</li>
+                     : 
+                        this.props.searchResults.map((book) => {
+                            let currentShelf = 'none'
+                            const currentBook = this.props.currentReads.find((currBook) => currBook.id === book.id);
+                            if (currentBook) {
+                                currentShelf = currentBook.shelf;
+                            }
+                            return <li key={book.id}><Book bookInfo={book} currentShelf={currentShelf} changeShelf={this.props.changeShelf}/></li>
+                            }
+                        )
+                }
               </ol>
             </div>
           </div>
