@@ -11,7 +11,7 @@ const Bookshelf = (props) => {
           {props.bookList.map((book) => (
           <li key={book.id}>
             <Book bookInfo={book} currentShelf={props.id} changeShelf={props.changeShelf}/>
-          </li>  
+          </li>
           ))}
         </ol>
       ): (
@@ -21,7 +21,6 @@ const Bookshelf = (props) => {
   </div>
   )
 }
-
 export default Bookshelf;
 
 Bookshelf.PropTypes = {

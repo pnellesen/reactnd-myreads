@@ -23,7 +23,7 @@ class BooksApp extends React.Component {
   }
 
   updateSearchVal = (newVal) => {
-    
+
     this.setState({searchVal: newVal}, () => newVal.length > 0 ? (
       BooksAPI.search(this.state.searchVal).then((result) => {
         this.setState({searchResults: result})
@@ -32,7 +32,7 @@ class BooksApp extends React.Component {
       this.setState({searchResults: []})
      )
     );
-    
+
   }
 
   getCurrentReads() {
@@ -65,7 +65,7 @@ class BooksApp extends React.Component {
       } catch(err) {
           console.log("book update error: %O", err);
       }
-      
+
     })
 
   }
@@ -75,7 +75,7 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    
+
     return (
       <div className="app">
         <Route path='/search' render={() =>  (
@@ -94,7 +94,7 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                {this.bookshelfList.map((bookshelf) => 
+                {this.bookshelfList.map((bookshelf) =>
                   (
                     <Bookshelf
                       key={bookshelf.id}
@@ -116,5 +116,4 @@ class BooksApp extends React.Component {
     )
   }
 }
-
 export default BooksApp

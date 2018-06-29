@@ -15,15 +15,14 @@ const Book = (props) => {
                 ) : (
                     <div className="book-authors">{props.bookInfo.publisher}</div>
                 )}
-                
+
             </div>
         ) : (
             <div>Loading...</div>
         )
-        
+
     )
 }
-
 export default Book
 
 Book.PropTypes = {
