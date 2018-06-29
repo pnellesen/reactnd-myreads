@@ -19,21 +19,18 @@ class BookSearch extends Component {
         } else {
             clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
-                console.log("keyUp delay - value: " + this.state.value);
                 this.props.onUpdate(this.state.value);
-                
             }, 500);
         }
-        
 
     }
+
     _onChange = (evt) => {
-        evt.persist();
+        //evt.persist();
         this.setState({value: evt.target.value});
     }
 
     render() {
-        console.log("BookSearch props: %O", this.props);
         return (
             <div className="search-books">
             <div className="search-books-bar">
@@ -74,3 +71,11 @@ class BookSearch extends Component {
     }
 }
 export default BookSearch
+
+BookSearch.PropTypes = {
+    searchVal: PropTypes.string,
+    onUpdate: PropTypes.func.isRequired,
+    searchResults: PropTypes.any.isRequired,
+    currentReads: PropTypes.array.isRequired,
+    changeShelf: PropTypes.string.isRequired
+}

@@ -13,4 +13,11 @@ it('renders without crashing', () => {
   ReactDOM.render(<App />, div)
 })
 
+it('creates error on update() when invalid id is sent', () => {
+  BooksAPI.update('blah','blah').then((result) => {
+    console.log("result: %O", result);
+    result.error ? true : false;
+  })
+})
+
 

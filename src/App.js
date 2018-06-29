@@ -7,9 +7,9 @@ import BookSearch from './BookSearch';
 
 class BooksApp extends React.Component {
   state = {
-    currentReads: [],// Array which will store the results of getAll() and search();
+    currentReads: [],// Array which will store the results of getAll(), and will be updated if user adds a book to a shelf from the search page
     searchVal: '',
-    searchResults: []// value in the <BookSearch> component. Pass as a prop since <BookSearch> is re-rendered when Route changes
+    searchResults: []// Array which will store the results from search()
   }
   bookshelfList = [
     {id: 'currentlyReading', name:'Currently Reading'},
@@ -52,28 +52,17 @@ class BooksApp extends React.Component {
       } else {
         let newBook = prevState.searchResults.find((book) => book.id === bookId)
         newBook.shelf = shelfId
-        {currentReads : prevState.currentReads.push(newBook)}
+        return ({currentReads: [...prevState.currentReads, newBook]})
       }
-      
-    }, () => {
+    }, () => {//setState callback function. Runs after setState completes.
       try {
         const bookObj = {id: bookId}
         BooksAPI.update(bookObj, shelfId).then((result) => {
-          /**
-           * TODO: compare ids in the result shelves with the ids in our 
-           * new state. If they're different, it probably means nothing was actually updated
-           * reset state back to prevState and show user an error message?
-           */
-          console.log(`bookupdate - result for book id ${bookId}: %O`, result);
+        // Compare result bookshelf/bookid lists with the same lists for each bookshelf in currentReads?
+        // Both should be the same, if not, can we assume something happened?
+        console.log(`bookupdate - result for book id ${bookId}: %O`, result);
         });
       } catch(err) {
-        /**
-           * TODO: maybe some error handling to let user know 
-           * backend hasn't been updated even though UI has?
-           * I'd rather do the state update first since it's (almost) instanteneous
-           * from a UI perspectve, but if update fails, I want to reset the state in a user friendly way
-           * 
-           */
           console.log("book update error: %O", err);
       }
       

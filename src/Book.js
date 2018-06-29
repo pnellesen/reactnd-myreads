@@ -2,7 +2,6 @@ import React from 'react';
 import BookshelfChanger from './BookshelfChanger';
 import PropTypes from 'prop-types';
 const Book = (props) => {
-    console.log("Book props: %O", props);
     return (
         props.bookInfo ? (
             <div className="book">
@@ -26,3 +25,9 @@ const Book = (props) => {
 }
 
 export default Book
+
+Book.PropTypes = {
+    bookInfo: PropTypes.object,
+    currentShelf: PropTypes.string.isRequired,
+    changeShelf: PropTypes.string.isRequired
+}

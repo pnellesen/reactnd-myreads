@@ -23,3 +23,8 @@ const Bookshelf = (props) => {
 }
 
 export default Bookshelf;
+
+Bookshelf.PropTypes = {
+  shelfName: PropTypes.string.isRequired,
+  bookList: PropTypes.array
+}
