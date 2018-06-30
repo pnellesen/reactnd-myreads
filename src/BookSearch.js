@@ -9,9 +9,11 @@ class BookSearch extends Component {
     timeout = null;
 
     /**
-     * Don't send query to search backend on every keystroke,
+     * @description - Don't send query to search backend on every keystroke,
      * wait until it's been .5s since last keyUp, then do the query,
      * assuming user is done typing. Do search immediately if they hit the Enter key
+     *
+     * @param {SyntheticEvent} evt
      */
     _keyUp = (evt) => {
         if (evt.key === 'Enter') {
@@ -22,11 +24,14 @@ class BookSearch extends Component {
                 this.props.onUpdate(this.state.value);
             }, 500);
         }
-
     }
 
+	/**
+  	* @description update the search text state variable when the text field changes
+  	*
+  	* @param {SyntheticEvent} evt
+    */
     _onChange = (evt) => {
-        //evt.persist();
         this.setState({value: evt.target.value});
     }
 
@@ -45,11 +50,14 @@ class BookSearch extends Component {
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
                 <input type="text" value={this.state.value} onChange={this._onChange} onKeyUp={this._keyUp} placeholder="Search by title or author"/>
-
               </div>
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
+             	{/*
+                	Display the results from the BooksAPI.search() function.
+                	If an error is returned, display a note to the user.
+                */}
                 {
                     this.props.searchResults.error ? 
                         <li>No books found</li>

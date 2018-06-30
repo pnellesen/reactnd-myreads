@@ -17,13 +17,13 @@ class BooksApp extends React.Component {
     {id: 'read', name:'Read'},
   ]
 
-  componentDidUpdate() {
-    console.log("currentReads? %O", this.state.currentReads);
-    console.log("search results? %O", this.state.searchResults);
-  }
-
+  /**
+  * @description Update the search value state variable - if the search field value is non-empty, send to
+  *	the BooksAPI search function and store the results. If empty, set the searchResults state variable to empty array
+  *
+  * @param {string} newVal
+  */
   updateSearchVal = (newVal) => {
-
     this.setState({searchVal: newVal}, () => newVal.length > 0 ? (
       BooksAPI.search(this.state.searchVal).then((result) => {
         this.setState({searchResults: result})
@@ -32,9 +32,12 @@ class BooksApp extends React.Component {
       this.setState({searchResults: []})
      )
     );
-
   }
 
+  /**
+  * @description get the current list of books in the user's library from the BooksAPI.getAll() service,
+  * and store in the currentReads state variable
+  */
   getCurrentReads() {
     BooksAPI.getAll().then((result) => {
       this.setState({
@@ -43,6 +46,14 @@ class BooksApp extends React.Component {
     })
   }
 
+  /**
+  * @description change the bookshelf assigned to a book, either in currentReads or searchResults state arrays, then 
+  * update the backend via BooksAPI.update() in the setState() callback function. If book is not yet in our library,
+  * add it after adding the shelfId to the book object from searchResults state variable.
+  *
+  * @param {string} bookId
+  * @param {string} shelfId
+  */
   changeBookshelf = (bookId, shelfId) =>  {
     // first update our state, then update the backend. Much better performance on front end
     this.setState((prevState) => {
@@ -65,17 +76,17 @@ class BooksApp extends React.Component {
       } catch(err) {
           console.log("book update error: %O", err);
       }
-
     })
-
   }
 
+  /**
+  * @description after App component has mounted, populate the user's library from the backend
+  */
   componentDidMount() {
     this.getCurrentReads()
   }
 
   render() {
-
     return (
       <div className="app">
         <Route path='/search' render={() =>  (
